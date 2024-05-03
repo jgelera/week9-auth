@@ -10,26 +10,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  String _error = "";
   @override
   Widget build(BuildContext context) {
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
-    final email = TextField(
+    final email = TextFormField(
       key: const Key('emailField'),
       controller: emailController,
       decoration: const InputDecoration(
         hintText: "Email",
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Email cannot be empty.';
+        }
+        return null;
+      },
     );
 
-    final password = TextField(
+    final password = TextFormField(
       key: const Key('pwField'),
       controller: passwordController,
       obscureText: true,
       decoration: const InputDecoration(
         hintText: 'Password',
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Password cannot be empty.';
+        }
+        return null;
+      },
     );
 
     final loginButton = Padding(
@@ -37,10 +51,26 @@ class _LoginPageState extends State<LoginPage> {
       padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: ElevatedButton(
         onPressed: () async {
-          await context.read<MyAuthProvider>().signIn(
-              emailController.text.trim(), passwordController.text.trim());
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState?.save();
+
+            String? result = await context.read<MyAuthProvider>().signIn(
+                emailController.text.trim(), passwordController.text.trim());
+
+            if (result == null) {
+              if (context.mounted) Navigator.pop(context);
+            } else {
+              showDialog(context: context, builder: _errorDialog);
+              setState(() {
+                _error = result;
+              });
+            }
+          }
         },
         child: const Text('Log In', style: TextStyle(color: Colors.white)),
+        style: ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll<Color>(Colors.black),
+        ),
       ),
     );
 
@@ -56,12 +86,17 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
         child: const Text('Sign Up', style: TextStyle(color: Colors.white)),
+        style: ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll<Color>(Colors.black),
+        ),
       ),
     );
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
+          child: Form(
+        key: _formKey,
         child: ListView(
           shrinkWrap: true,
           padding: const EdgeInsets.only(left: 40.0, right: 40.0),
@@ -77,7 +112,31 @@ class _LoginPageState extends State<LoginPage> {
             signUpButton,
           ],
         ),
+      )),
+    );
+  }
+
+  Widget _errorDialog(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Input Error'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(_error),
+        ],
       ),
+      actions: <Widget>[
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _error = "";
+            });
+            Navigator.of(context).pop();
+          },
+          child: const Text('Close'),
+        ),
+      ],
     );
   }
 }
