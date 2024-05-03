@@ -1,7 +1,9 @@
 import "package:firebase_auth/firebase_auth.dart";
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseAuthAPI {
   static final FirebaseAuth auth = FirebaseAuth.instance;
+  static final FirebaseFirestore db = FirebaseFirestore.instance;
 
   Stream<User?> getUser() {
     return auth.authStateChanges();
@@ -22,12 +24,14 @@ class FirebaseAuthAPI {
     }
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(
+      String email, String password, String firstName, String lastName) async {
     UserCredential credential;
 
     try {
       final credential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      await addUser(credential.user!, firstName, lastName);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -36,6 +40,21 @@ class FirebaseAuthAPI {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<String> addUser(User user, String firstName, String lastName) async {
+    try {
+      final docRef = await db.collection("users").add({
+        'email': user.email,
+        'firstname': firstName,
+        'lastname': lastName,
+      });
+      await db.collection("users").doc(docRef.id).update({'id': docRef.id});
+
+      return "Successfully added user!";
+    } on FirebaseException catch (e) {
+      return "Failed with error '${e.code}: ${e.message}";
     }
   }
 
