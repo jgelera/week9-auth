@@ -8,7 +8,6 @@ import '../screens/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -19,7 +18,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: ((context) => TodoListProvider())),
-        ChangeNotifierProvider(create: ((context) => AuthProvider())),
+        ChangeNotifierProvider(create: ((context) => MyAuthProvider())),
       ],
       child: MyApp(),
     ),
@@ -43,10 +42,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/todo': (context) => const LoginPage(),
         '/user_details': (context) => const UserDetailsPage(),
-        
       },
     );
   }
 }
-
-

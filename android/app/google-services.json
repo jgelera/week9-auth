@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "443323527070",
-    "project_id": "cmsc23authtest",
-    "storage_bucket": "cmsc23authtest.appspot.com"
+    "project_number": "629190018714",
+    "project_id": "cmsc23-todo-app-jgelera",
+    "storage_bucket": "cmsc23-todo-app-jgelera.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:443323527070:android:667819be72792eec4c708f",
+        "mobilesdk_app_id": "1:629190018714:android:7aa94f850fea1d0b85c123",
         "android_client_info": {
           "package_name": "com.example.week7_networking_discussion"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "443323527070-p0pbbih4tklpt71a8c141jgu1kfbup2h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAD7O-lu3Rv4LyakFv5oj9D_TPV08MaSCQ"
+          "current_key": "AIzaSyAmoFeFSS0OilXpO_ElJeybr2g-40WNh2g"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "443323527070-p0pbbih4tklpt71a8c141jgu1kfbup2h.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
